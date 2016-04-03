@@ -1,4 +1,5 @@
 #include <iostream>
+#include "appinfo.h"
 
 using namespace std;
 
