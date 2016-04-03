@@ -2,15 +2,12 @@
 # Project Properties
 ################################################################################
 cmake_minimum_required (VERSION 2.8.8)
-set (PROJECT_NAME "project-name-here")
+set (PROJECT_NAME "proj6")
 set (APPLICATION_COPYRIGHT_YEARS 2016)
 set (APPLICATION_VERSION_MAJOR 0)
 set (APPLICATION_VERSION_MINOR 0)
 set (APPLICATION_VERSION_PATCH 0)
 set (APPLICATION_VERSION_TYPE SNAPSHOT)
-
-# Options. Turn on with 'cmake -Dmyvarname=ON'.
-option(test "Build all tests." OFF) # Makes boolean 'test' available. ON or OFF
 
 set (BUILD_SHARED_LIBS 1)
 
@@ -101,12 +98,6 @@ ExternalProject_Get_Property (googletest binary_dir)
 set (GTEST_LIBS_DIR ${binary_dir}/googlemock/gtest)
 
 ################################################################################
-# Project Output Paths
-################################################################################
-set (MAINFOLDER ${PROJECT_SOURCE_DIR})
-set (EXECUTABLE_OUTPUT_PATH "${MAINFOLDER}/bin")
-
-################################################################################
 # Add Documentation Targets
 ################################################################################
 include (DocumentationTargets)
@@ -122,15 +113,12 @@ file (GLOB_RECURSE SRC_FILES
   ${PROJECT_SOURCE_DIR}/src/*.c
   )
 
-add_library (common ${SRC_FILES})
-
 add_executable(${PROJECT_NAME} ${COMMON_INCLUDES} ${PROJECT_SOURCE_DIR}/main.cpp ${SRC_FILES})
-target_link_libraries (${PROJECT_NAME} ${common} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries (${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 
 ################################################################################
 # Test Targets
 ################################################################################
-include (CTest)
 set (PROJECT_TEST_NAME ${PROJECT_NAME}_test)
 add_definitions(${MSVC_COMPILER_DEFS})
 enable_testing()
@@ -141,6 +129,11 @@ include_directories(
   )
 
 file (GLOB TEST_SRC_FILES
+  ${PROJECT_SOURCE_DIR}/src/*.cpp
+  ${PROJECT_SOURCE_DIR}/src/*.cxx
+  ${PROJECT_SOURCE_DIR}/src/*.cc
+  ${PROJECT_SOURCE_DIR}/src/*.C
+  ${PROJECT_SOURCE_DIR}/src/*.c
   ${PROJECT_SOURCE_DIR}/test/*.cpp
   ${PROJECT_SOURCE_DIR}/test/*.cxx
   ${PROJECT_SOURCE_DIR}/test/*.cc
@@ -169,10 +162,13 @@ else()
     )
 endif()
 
-target_link_libraries(${PROJECT_TEST_NAME} ${common} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${PROJECT_TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
 
 ################################################################################
 # Installation
 ################################################################################
+# Project Output Paths
+set (EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
+
 install (TARGETS ${PROJECT_NAME} DESTINATION bin)
 install (TARGETS ${TEST_BIN} DESTINATION bin)
